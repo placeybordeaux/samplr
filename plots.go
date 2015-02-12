@@ -68,6 +68,7 @@ func (s *SamplrHTTP) LinePlotCount(w http.ResponseWriter, r *http.Request, param
 	width := 600
 	height := 600
 
+	r.ParseForm()
 	if r.Form.Get("height") != "" {
 		height, err = strconv.Atoi(r.Form.Get("height"))
 		if err != nil {
