@@ -11,6 +11,7 @@ import (
 
 	"code.google.com/p/plotinum/plot"
 	"code.google.com/p/plotinum/plotutil"
+	"code.google.com/p/plotinum/vg"
 	"code.google.com/p/plotinum/vg/vgimg"
 )
 
@@ -64,7 +65,24 @@ func (s *SamplrHTTP) LinePlotCount(w http.ResponseWriter, r *http.Request, param
 		return
 	}
 
-	canvas := vgimg.PngCanvas{vgimg.New(600, 600)}
+	width := 600
+	height := 600
+
+	if r.Form.Get("height") != "" {
+		height, err = strconv.Atoi(r.Form.Get("height"))
+		if err != nil {
+			JSONError(w, http.StatusBadRequest, err.Error())
+		}
+	}
+
+	if r.Form.Get("width") != "" {
+		width, err = strconv.Atoi(r.Form.Get("width"))
+		if err != nil {
+			JSONError(w, http.StatusBadRequest, err.Error())
+		}
+	}
+
+	canvas := vgimg.PngCanvas{vgimg.New(vg.Points(float64(width)), vg.Points(float64(height)))}
 	p.Draw(plot.MakeDrawArea(canvas))
 
 	w.WriteHeader(http.StatusOK)
